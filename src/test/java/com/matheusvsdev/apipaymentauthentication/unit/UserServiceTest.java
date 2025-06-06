@@ -29,6 +29,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 3.0
+ * Testes unitários para `UserService`
+ * Verifica lógica de autenticação e busca de usuário
+ */
 @ExtendWith(SpringExtension.class)
 public class UserServiceTest {
 	
@@ -45,6 +50,10 @@ public class UserServiceTest {
 	private User user;
 	private List<UserDetailsProjection> userDetails;
 
+	/**
+     * Configura o ambiente de testes antes de cada execução.
+     * Simula usuários existentes e inexistentes.
+     */
     @BeforeEach
     void setUp() throws Exception {
     	
@@ -73,6 +82,9 @@ public class UserServiceTest {
 				.thenReturn(Optional.empty()); // Usuário não existe
     }
 
+    /**
+     * Testa se `loadUserByUsername` retorna detalhes do usuário corretamente
+     */
     @Test
 	public void loadUserByUsernameShouldReturnUserDetailsWhenUserExists() {
 		
@@ -82,6 +94,9 @@ public class UserServiceTest {
 		Assertions.assertEquals(result.getUsername(), existingUsername);
 	}
 	
+    /**
+     * Testa se `loadUserByUsername` lança erro quando usuário não existe.
+     */
 	@Test
 	public void loadUserByUsernameShouldThrowUsernameNotFoundExceptionWhenUserDoesNotExist() {
 		
@@ -90,6 +105,9 @@ public class UserServiceTest {
 		});
 	}
 	
+	/**
+     * Testa se `authenticated` retorna usuário corretamente.
+     */
 	@Test
 	public void authenticatedShouldReturnUserWhenUserExists() {
 		
@@ -101,6 +119,9 @@ public class UserServiceTest {
 		Assertions.assertEquals(result.getUsername(), existingUsername);
 	}
 	
+	/**
+     * Testa se `authenticated` lança erro quando usuário não existe.
+     */
 	@Test
 	public void authenticatedShouldThrowUsernameNotFoundExceptionWhenUserDoesNotExist() {
 		
@@ -111,6 +132,9 @@ public class UserServiceTest {
 		});
 	}
 	
+	/**
+     * Testa se `getMe` retorna um `UserDTO` corretamente.
+     */
 	@Test
 	public void getMeShouldReturnUserDTOWhenUserAuthenticated() {
 	
@@ -123,6 +147,9 @@ public class UserServiceTest {
 		Assertions.assertEquals(result.getEmail(), existingUsername);		
 	}
 	
+	/**
+     * Testa se `getMe` lança erro quando usuário não está autenticado.
+     */
 	@Test
 	public void getMeShouldThrowUsernameNotFoundExceptionWhenUserNotAuthenticated() {
 		

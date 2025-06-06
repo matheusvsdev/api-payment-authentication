@@ -15,6 +15,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+/**
+ * 3.5
+ * Testes unitários para `AuthService`
+ * Verifica lógica de validação de permissões (Admin ou Self)
+ */
 @ExtendWith(SpringExtension.class)
 public class AuthServiceTest {
 
@@ -26,6 +31,10 @@ public class AuthServiceTest {
     
     private User admin, selfClient, otherClient;
 
+    /**
+     * Configura o ambiente de testes antes de cada execução.
+     * Simula usuários ADMIN, CLIENT próprio e CLIENT de outra conta.
+     */
     @BeforeEach
     void setUp() {
     	admin = UserFactory.createAdminUser();
@@ -33,6 +42,9 @@ public class AuthServiceTest {
 		otherClient = UserFactory.createCustomClientUser(2L, "Jane Doe");
     }
 
+    /**
+     * Testa se `validateSelfOrAdmin` permite acesso quando ADMIN está logado.
+     */
     @Test
 	public void validateSelfOrAdminShouldDoNothingWhenAdminLogged() {
 		
@@ -45,6 +57,9 @@ public class AuthServiceTest {
 		});
 	}
 	
+    /**
+     * Testa se `validateSelfOrAdmin` permite acesso ao próprio usuário logado.
+     */
 	@Test
 	public void validateSelfOrAdminShouldDoNothingWhenSelfLogged() {
 		
@@ -57,6 +72,10 @@ public class AuthServiceTest {
 		});
 	}
 	
+	/**
+     * Testa se `validateSelfOrAdmin` bloqueia acesso indevido de outro cliente.
+     */
+
 	@Test
 	public void validateSelfOrAdminThrowsForbiddenExceptionWhenClientOtherLogged() {
 		

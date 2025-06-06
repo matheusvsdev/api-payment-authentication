@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import com.matheusvsdev.apipaymentauthentication.entities.User;
 
 
+// 1.3
 public class UserDTO {
 
     private Long id;

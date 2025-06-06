@@ -52,9 +52,11 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
+// 3.3
 @Configuration
 public class AuthorizationServerConfig {
 
+	// 1. Variáveis de configuração do cliente OAuth2 (valores definidos no application.properties)
 	@Value("${security.client-id}")
 	private String clientId;
 
@@ -67,24 +69,35 @@ public class AuthorizationServerConfig {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
+	/**
+     * 2. Configura o Authorization Server (Spring Security OAuth2)
+     * Define endpoints de autenticação e geração de tokens JWT
+     */
 	@Bean
 	@Order(2)
 	public SecurityFilterChain asSecurityFilterChain(HttpSecurity http) throws Exception {
+	    OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer.authorizationServer();
+	    
+	    http.securityMatcher(authorizationServerConfigurer.getEndpointsMatcher()) // Define os endpoints do Authorization Server
+	        .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+	        .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+	        .with(authorizationServerConfigurer, customizer -> customizer
+	            .tokenEndpoint(tokenEndpoint -> tokenEndpoint
+	                .accessTokenRequestConverter(new CustomPasswordAuthenticationConverter())
+	                .authenticationProvider(new CustomPasswordAuthenticationProvider(
+	                    authorizationService(), tokenGenerator(), userDetailsService, passwordEncoder()
+	                ))
+	            )
+	        );
 
-		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-
-		// @formatter:off
-		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-			.tokenEndpoint(tokenEndpoint -> tokenEndpoint
-				.accessTokenRequestConverter(new CustomPasswordAuthenticationConverter())
-				.authenticationProvider(new CustomPasswordAuthenticationProvider(authorizationService(), tokenGenerator(), userDetailsService, passwordEncoder())));
-
-		http.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()));
-		// @formatter:on
-
-		return http.build();
+	    return http.build();
 	}
 
+
+	/**
+     * 3. Define serviços de autorização em memória
+     * Gerenciamento de consentimentos e autorizações
+     */
 	@Bean
 	public OAuth2AuthorizationService authorizationService() {
 		return new InMemoryOAuth2AuthorizationService();
@@ -95,11 +108,15 @@ public class AuthorizationServerConfig {
 		return new InMemoryOAuth2AuthorizationConsentService();
 	}
 
+	/**
+     * 4. Gerenciamento de senhas usando BCrypt
+     */
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
+	// 5. Registro de clientes OAuth2
 	@Bean
 	public RegisteredClientRepository registeredClientRepository() {
 		// @formatter:off
@@ -109,7 +126,7 @@ public class AuthorizationServerConfig {
 			.clientSecret(passwordEncoder().encode(clientSecret))
 			.scope("read")
 			.scope("write")
-			.authorizationGrantType(new AuthorizationGrantType("password"))
+			.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
 			.tokenSettings(tokenSettings())
 			.clientSettings(clientSettings())
 			.build();
@@ -118,6 +135,7 @@ public class AuthorizationServerConfig {
 		return new InMemoryRegisteredClientRepository(registeredClient);
 	}
 
+	// 6. Configuração de tokens e suas regras
 	@Bean
 	public TokenSettings tokenSettings() {
 		// @formatter:off
@@ -138,6 +156,7 @@ public class AuthorizationServerConfig {
 		return AuthorizationServerSettings.builder().build();
 	}
 
+	// 7. Configuração de geração e customização de tokens JWT
 	@Bean
 	public OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator() {
 		NimbusJwtEncoder jwtEncoder = new NimbusJwtEncoder(jwkSource());

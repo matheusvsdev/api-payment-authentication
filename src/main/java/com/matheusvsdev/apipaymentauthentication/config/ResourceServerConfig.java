@@ -1,6 +1,7 @@
 package com.matheusvsdev.apipaymentauthentication.config;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -22,6 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+// 3.4
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -30,6 +32,9 @@ public class ResourceServerConfig {
 	@Value("${cors.origins}")
 	private String corsOrigins;
 
+	/**
+     * 8. Configuração de permissões para o banco H2 (somente em ambiente de teste)
+     */
 	@Bean
 	@Profile("test")
 	@Order(1)
@@ -40,6 +45,10 @@ public class ResourceServerConfig {
 		return http.build();
 	}
 
+	/**
+     * 9. Configuração do Resource Server
+     * Define regras de acesso e proteção via OAuth2 JWT
+     */
 	@Bean
 	@Order(3)
 	public SecurityFilterChain rsSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -51,24 +60,34 @@ public class ResourceServerConfig {
 		return http.build();
 	}
 
+	/**
+     * 10. Conversão de authorities do token JWT
+     */
 	@Bean
 	public JwtAuthenticationConverter jwtAuthenticationConverter() {
 		JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 		grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-		grantedAuthoritiesConverter.setAuthorityPrefix("");
+		grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
 
 		JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
 		jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
 		return jwtAuthenticationConverter;
 	}
 
+	/**
+     * 11. Configuração de CORS
+     * Permite requisições de múltiplas origens
+     */
 	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
-
-		String[] origins = corsOrigins.split(",");
-
+	public CorsConfigurationSource corsConfigurationSource() {
+		
 		CorsConfiguration corsConfig = new CorsConfiguration();
-		corsConfig.setAllowedOriginPatterns(Arrays.asList(origins));
+		
+		if(corsConfig != null && !corsOrigins.isBlank()) {
+			List<String> allowedOrigins = Arrays.asList( corsOrigins.split(","));
+			corsConfig.setAllowedOriginPatterns(allowedOrigins);
+		}
+
 		corsConfig.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "PATCH"));
 		corsConfig.setAllowCredentials(true);
 		corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
@@ -76,13 +95,5 @@ public class ResourceServerConfig {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", corsConfig);
 		return source;
-	}
-
-	@Bean
-	FilterRegistrationBean<CorsFilter> corsFilter() {
-		FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(
-				new CorsFilter(corsConfigurationSource()));
-		bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-		return bean;
 	}
 }
