@@ -1,46 +1,72 @@
 package com.matheusvsdev.apipaymentauthentication.unit;
 
 import com.matheusvsdev.apipaymentauthentication.entities.User;
-import com.matheusvsdev.apipaymentauthentication.repository.UserRepository;
+import com.matheusvsdev.apipaymentauthentication.factory.UserFactory;
 import com.matheusvsdev.apipaymentauthentication.service.AuthService;
+import com.matheusvsdev.apipaymentauthentication.service.UserService;
+import com.matheusvsdev.apipaymentauthentication.service.exceptions.ForbiddenException;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.Mockito;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
-
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 public class AuthServiceTest {
 
     @InjectMocks
     private AuthService authService;
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
+    
+    private User admin, selfClient, otherClient;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+    	admin = UserFactory.createAdminUser();
+		selfClient = UserFactory.createCustomClientUser(1L, "John Doe");
+		otherClient = UserFactory.createCustomClientUser(2L, "Jane Doe");
     }
 
     @Test
-    void mustGenerateJwtTokenWhenLoggingInWithCorrectData() {
-        User user = new User(1L, "John Doe", "johndoe@example.com", "password123"); // Senha correta
-
-        when(userRepository.findByEmail("johndoe@example.com")).thenReturn(Optional.of(user));
-
-        String token = authService.authenticate("johndoe@example.com", "password123");
-
-        assertNotNull(token);
-        assertTrue(token.startsWith("ey"));
-    }
+	public void validateSelfOrAdminShouldDoNothingWhenAdminLogged() {
+		
+		Mockito.when(userService.authenticated()).thenReturn(admin);
+		
+		Long userId = admin.getId();
+		
+		Assertions.assertDoesNotThrow(() -> {
+			authService.validateSelfOrAdmin(userId);
+		});
+	}
+	
+	@Test
+	public void validateSelfOrAdminShouldDoNothingWhenSelfLogged() {
+		
+		Mockito.when(userService.authenticated()).thenReturn(selfClient);
+		
+		Long userId = selfClient.getId();
+		
+		Assertions.assertDoesNotThrow(() -> {
+			authService.validateSelfOrAdmin(userId);
+		});
+	}
+	
+	@Test
+	public void validateSelfOrAdminThrowsForbiddenExceptionWhenClientOtherLogged() {
+		
+		Mockito.when(userService.authenticated()).thenReturn(selfClient);
+		
+		Long userId = otherClient.getId();
+		
+		Assertions.assertThrows(ForbiddenException.class, () -> {
+			authService.validateSelfOrAdmin(userId);
+		});
+	}
 
 }
