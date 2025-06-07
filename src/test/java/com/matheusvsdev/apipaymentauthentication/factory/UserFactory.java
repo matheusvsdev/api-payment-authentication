@@ -3,9 +3,7 @@ package com.matheusvsdev.apipaymentauthentication.factory;
 import com.matheusvsdev.apipaymentauthentication.entities.Role;
 import com.matheusvsdev.apipaymentauthentication.entities.User;
 
-
 /**
- * 1.0
  * Factory para criação de objetos `User` usados em testes unitários.
  * Facilita a geração de usuários padrão e personalizados para diversos cenários.
  */

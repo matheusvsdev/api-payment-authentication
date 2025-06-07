@@ -1,4 +1,4 @@
-package com.matheusvsdev.apipaymentauthentication.customgrant;
+package com.matheusvsdev.apipaymentauthentication.config.customgrant;
 
 import java.security.Principal;
 import java.util.HashSet;

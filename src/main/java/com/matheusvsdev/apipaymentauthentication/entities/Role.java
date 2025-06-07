@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import org.springframework.security.core.GrantedAuthority;
 
-// 1.2
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "tb_role")

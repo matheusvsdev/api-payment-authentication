@@ -1,5 +1,6 @@
 package com.matheusvsdev.apipaymentauthentication.unit;
 
+import com.matheusvsdev.apipaymentauthentication.dto.CreateUserDTO;
 import com.matheusvsdev.apipaymentauthentication.dto.UserDTO;
 import com.matheusvsdev.apipaymentauthentication.entities.User;
 import com.matheusvsdev.apipaymentauthentication.factory.UserDetailsFactory;
@@ -20,17 +21,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * 3.0
  * Testes unitários para `UserService`
  * Verifica lógica de autenticação e busca de usuário
  */

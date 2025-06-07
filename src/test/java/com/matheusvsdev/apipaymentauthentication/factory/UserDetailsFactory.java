@@ -6,7 +6,6 @@ import java.util.List;
 import com.matheusvsdev.apipaymentauthentication.projections.UserDetailsProjection;
 
 /**
- * 2.0
  * Factory para criar listas de `UserDetailsProjection` usadas em testes.
  * Permite simular diferentes tipos de usuários sem precisar de banco de dados real.
  */
@@ -41,7 +40,6 @@ public class UserDetailsFactory {
 }
 
 /**
- * 2.1
  * Implementação da interface `UserDetailsProjection`
  * Usada para armazenar detalhes de usuários fictícios em testes.
  */

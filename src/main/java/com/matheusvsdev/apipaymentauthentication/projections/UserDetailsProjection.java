@@ -1,7 +1,6 @@
 package com.matheusvsdev.apipaymentauthentication.projections;
 
 /**
- * 2.2
  * Interface para projeção de detalhes do usuário
  * Permite obter informações essenciais sem expor a entidade completa
  */

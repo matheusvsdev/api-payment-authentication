@@ -16,7 +16,6 @@ import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
- * 3.5
  * Testes unitários para `AuthService`
  * Verifica lógica de validação de permissões (Admin ou Self)
  */

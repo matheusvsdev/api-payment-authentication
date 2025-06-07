@@ -6,7 +6,6 @@ import com.matheusvsdev.apipaymentauthentication.service.exceptions.ForbiddenExc
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-// 3.6
 @Service
 public class AuthService {
 

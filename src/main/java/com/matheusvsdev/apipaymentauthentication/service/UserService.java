@@ -1,4 +1,5 @@
 package com.matheusvsdev.apipaymentauthentication.service;
+import com.matheusvsdev.apipaymentauthentication.dto.CreateUserDTO;
 import com.matheusvsdev.apipaymentauthentication.dto.UserDTO;
 import com.matheusvsdev.apipaymentauthentication.entities.Role;
 import com.matheusvsdev.apipaymentauthentication.entities.User;
@@ -15,7 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// 3.2
 @Service
 public class UserService implements UserDetailsService {
 
