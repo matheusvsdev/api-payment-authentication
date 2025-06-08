@@ -3,7 +3,9 @@ package com.matheusvsdev.apipaymentauthentication.entities;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_wallet")
@@ -12,12 +14,20 @@ public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
     private WalletType walletType;
     private BigDecimal balance;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "senderId")
+    private Set<Transaction> sentTransactions = new HashSet<>();
+
+    @OneToMany(mappedBy = "receiverId")
+    private Set<Transaction> receivedTransactions = new HashSet<>();
 
     public Wallet() {
     }
@@ -55,6 +65,14 @@ public class Wallet {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<Transaction> getSentTransactions() {
+        return sentTransactions;
+    }
+
+    public Set<Transaction> getReceivedTransactions() {
+        return receivedTransactions;
     }
 
     @Override
