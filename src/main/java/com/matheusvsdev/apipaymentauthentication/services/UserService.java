@@ -1,10 +1,9 @@
-package com.matheusvsdev.apipaymentauthentication.service;
-import com.matheusvsdev.apipaymentauthentication.dto.CreateUserDTO;
+package com.matheusvsdev.apipaymentauthentication.services;
 import com.matheusvsdev.apipaymentauthentication.dto.UserDTO;
 import com.matheusvsdev.apipaymentauthentication.entities.Role;
 import com.matheusvsdev.apipaymentauthentication.entities.User;
 import com.matheusvsdev.apipaymentauthentication.projections.UserDetailsProjection;
-import com.matheusvsdev.apipaymentauthentication.repository.UserRepository;
+import com.matheusvsdev.apipaymentauthentication.repositories.UserRepository;
 import com.matheusvsdev.apipaymentauthentication.utils.CustomUserUtil;
 
 import java.util.List;

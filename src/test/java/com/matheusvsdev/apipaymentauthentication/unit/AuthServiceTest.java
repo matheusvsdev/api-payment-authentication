@@ -2,9 +2,9 @@ package com.matheusvsdev.apipaymentauthentication.unit;
 
 import com.matheusvsdev.apipaymentauthentication.entities.User;
 import com.matheusvsdev.apipaymentauthentication.factory.UserFactory;
-import com.matheusvsdev.apipaymentauthentication.service.AuthService;
-import com.matheusvsdev.apipaymentauthentication.service.UserService;
-import com.matheusvsdev.apipaymentauthentication.service.exceptions.ForbiddenException;
+import com.matheusvsdev.apipaymentauthentication.services.AuthService;
+import com.matheusvsdev.apipaymentauthentication.services.UserService;
+import com.matheusvsdev.apipaymentauthentication.services.exceptions.ForbiddenException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

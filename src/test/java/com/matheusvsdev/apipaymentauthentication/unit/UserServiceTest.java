@@ -1,13 +1,12 @@
 package com.matheusvsdev.apipaymentauthentication.unit;
 
-import com.matheusvsdev.apipaymentauthentication.dto.CreateUserDTO;
 import com.matheusvsdev.apipaymentauthentication.dto.UserDTO;
 import com.matheusvsdev.apipaymentauthentication.entities.User;
 import com.matheusvsdev.apipaymentauthentication.factory.UserDetailsFactory;
 import com.matheusvsdev.apipaymentauthentication.factory.UserFactory;
 import com.matheusvsdev.apipaymentauthentication.projections.UserDetailsProjection;
-import com.matheusvsdev.apipaymentauthentication.repository.UserRepository;
-import com.matheusvsdev.apipaymentauthentication.service.UserService;
+import com.matheusvsdev.apipaymentauthentication.repositories.UserRepository;
+import com.matheusvsdev.apipaymentauthentication.services.UserService;
 import com.matheusvsdev.apipaymentauthentication.utils.CustomUserUtil;
 
 import org.junit.jupiter.api.Assertions;

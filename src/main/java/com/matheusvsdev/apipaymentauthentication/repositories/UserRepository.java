@@ -1,4 +1,4 @@
-package com.matheusvsdev.apipaymentauthentication.repository;
+package com.matheusvsdev.apipaymentauthentication.repositories;
 
 import com.matheusvsdev.apipaymentauthentication.entities.User;
 import com.matheusvsdev.apipaymentauthentication.projections.UserDetailsProjection;

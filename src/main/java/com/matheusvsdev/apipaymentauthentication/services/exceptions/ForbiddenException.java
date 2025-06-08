@@ -1,4 +1,4 @@
-package com.matheusvsdev.apipaymentauthentication.service.exceptions;
+package com.matheusvsdev.apipaymentauthentication.services.exceptions;
 
 @SuppressWarnings("serial")
 public class ForbiddenException extends RuntimeException {

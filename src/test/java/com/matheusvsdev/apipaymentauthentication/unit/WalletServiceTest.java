@@ -3,11 +3,12 @@ package com.matheusvsdev.apipaymentauthentication.unit;
 import com.matheusvsdev.apipaymentauthentication.dto.CreateWalletDTO;
 import com.matheusvsdev.apipaymentauthentication.entities.User;
 import com.matheusvsdev.apipaymentauthentication.entities.Wallet;
-import com.matheusvsdev.apipaymentauthentication.entities.WalletType;
+import com.matheusvsdev.apipaymentauthentication.entities.enums.WalletType;
 import com.matheusvsdev.apipaymentauthentication.factory.UserFactory;
-import com.matheusvsdev.apipaymentauthentication.repository.UserRepository;
-import com.matheusvsdev.apipaymentauthentication.repository.WalletRepository;
-import com.matheusvsdev.apipaymentauthentication.service.WalletService;
+import com.matheusvsdev.apipaymentauthentication.factory.WalletFactory;
+import com.matheusvsdev.apipaymentauthentication.repositories.UserRepository;
+import com.matheusvsdev.apipaymentauthentication.repositories.WalletRepository;
+import com.matheusvsdev.apipaymentauthentication.services.WalletService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,29 +34,22 @@ public class WalletServiceTest {
     private WalletRepository walletRepository;
 
     private User user;
+    private Wallet walletPersonal, walletCompany;
 
     @BeforeEach
     void setUp() throws Exception {
 
         user = UserFactory.createCustomClientUser(1L, "johndoe@example.com");
+        walletPersonal = WalletFactory.createCustomWallet(1L, WalletType.PERSONAL);
+        walletCompany = WalletFactory.createCustomWallet(2L, WalletType.COMPANY);
 
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        Mockito.when(walletRepository.save(Mockito.any(Wallet.class))).thenReturn(walletPersonal); // Melhor estabilidade!
 
-        Mockito.when(walletRepository.save(Mockito.any(Wallet.class))).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     @Test
     public void testCreateWalletForUser() {
-
-        Wallet walletPersonal = new Wallet();
-        walletPersonal.setUser(user);
-        walletPersonal.setWalletType(WalletType.PERSONAL);
-        walletPersonal.setBalance(BigDecimal.ZERO);
-
-        Wallet walletCompany = new Wallet();
-        walletCompany.setUser(user);
-        walletCompany.setWalletType(WalletType.PERSONAL);
-        walletCompany.setBalance(BigDecimal.ZERO);
 
         walletService.create(new CreateWalletDTO(walletPersonal));
         walletService.create(new CreateWalletDTO(walletCompany));
@@ -72,17 +65,16 @@ public class WalletServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenUserTriesToCreateDuplicateWalletType() {
-        Wallet walletPersonal = new Wallet();
-        walletPersonal.setUser(user);
-        walletPersonal.setWalletType(WalletType.PERSONAL);
-        walletPersonal.setBalance(BigDecimal.ZERO);
 
         Mockito.when(walletRepository.existsByUserIdAndWalletType(user.getId(), WalletType.PERSONAL)).thenReturn(true);
 
         CreateWalletDTO duplicateWalletDTO = new CreateWalletDTO(walletPersonal);
 
-        Assertions.assertThrows(RuntimeException.class, () -> {
+        Exception exception = Assertions.assertThrows(RuntimeException.class, () -> {
             walletService.create(duplicateWalletDTO);
         });
+
+        Assertions.assertEquals("Usuário já possui uma carteira do tipo PERSONAL", exception.getMessage());
+
     }
 }

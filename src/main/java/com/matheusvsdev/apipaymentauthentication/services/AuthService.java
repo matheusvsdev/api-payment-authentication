@@ -1,7 +1,7 @@
-package com.matheusvsdev.apipaymentauthentication.service;
+package com.matheusvsdev.apipaymentauthentication.services;
 
 import com.matheusvsdev.apipaymentauthentication.entities.User;
-import com.matheusvsdev.apipaymentauthentication.service.exceptions.ForbiddenException;
+import com.matheusvsdev.apipaymentauthentication.services.exceptions.ForbiddenException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,14 +1,12 @@
-package com.matheusvsdev.apipaymentauthentication.service;
+package com.matheusvsdev.apipaymentauthentication.services;
 
 import com.matheusvsdev.apipaymentauthentication.dto.CreateUserDTO;
 import com.matheusvsdev.apipaymentauthentication.dto.CreateWalletDTO;
-import com.matheusvsdev.apipaymentauthentication.dto.UserDTO;
 import com.matheusvsdev.apipaymentauthentication.dto.WalletDTO;
 import com.matheusvsdev.apipaymentauthentication.entities.User;
 import com.matheusvsdev.apipaymentauthentication.entities.Wallet;
-import com.matheusvsdev.apipaymentauthentication.entities.WalletType;
-import com.matheusvsdev.apipaymentauthentication.repository.UserRepository;
-import com.matheusvsdev.apipaymentauthentication.repository.WalletRepository;
+import com.matheusvsdev.apipaymentauthentication.repositories.UserRepository;
+import com.matheusvsdev.apipaymentauthentication.repositories.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

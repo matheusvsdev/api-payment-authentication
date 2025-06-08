@@ -1,5 +1,6 @@
 package com.matheusvsdev.apipaymentauthentication.entities;
 
+import com.matheusvsdev.apipaymentauthentication.entities.enums.WalletType;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;

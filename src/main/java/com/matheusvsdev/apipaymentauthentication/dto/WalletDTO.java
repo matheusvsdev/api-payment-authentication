@@ -1,7 +1,7 @@
 package com.matheusvsdev.apipaymentauthentication.dto;
 
 import com.matheusvsdev.apipaymentauthentication.entities.Wallet;
-import com.matheusvsdev.apipaymentauthentication.entities.WalletType;
+import com.matheusvsdev.apipaymentauthentication.entities.enums.WalletType;
 
 import java.math.BigDecimal;
 
