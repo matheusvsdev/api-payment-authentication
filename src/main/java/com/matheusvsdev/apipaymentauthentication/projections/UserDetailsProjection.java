@@ -5,6 +5,15 @@ package com.matheusvsdev.apipaymentauthentication.projections;
  * Permite obter informações essenciais sem expor a entidade completa
  */
 public interface UserDetailsProjection {
+
+	// Retorna o nome de usuário
+	// Utilizado para autenticação e identificação
+	String getName();
+
+	// Retorna o nome de usuário
+	// Utilizado para autenticação e identificação
+	String getCpf();
+
     // Retorna o nome de usuário
     // Utilizado para autenticação e identificação
 	String getUsername();

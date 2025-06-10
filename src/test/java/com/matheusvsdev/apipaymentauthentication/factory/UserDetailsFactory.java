@@ -20,7 +20,7 @@ public class UserDetailsFactory {
      */
 	public static List<UserDetailsProjection> createCustomClientUser(String username) {
 		List<UserDetailsProjection> list = new ArrayList<>();
-		list.add(new UserDetailsImpl(username, "password123", 1L, "ROLE_CLIENT"));
+		list.add(new UserDetailsImpl("John Doe", "11122233344", username, "password123", 1L, "ROLE_CLIENT"));
 		return list;
 	}
 	
@@ -33,7 +33,7 @@ public class UserDetailsFactory {
      */
 	public static List<UserDetailsProjection> createCustomAdminUser(String username) {
 		List<UserDetailsProjection> list = new ArrayList<>();
-		list.add(new UserDetailsImpl(username, "password123", 1L, "ROLE_ADMIN"));
+		list.add(new UserDetailsImpl("Jane Doe", "33366655511", username, "password123", 1L, "ROLE_ADMIN"));
 		return list;
 	}
 
@@ -44,6 +44,8 @@ public class UserDetailsFactory {
  * Usada para armazenar detalhes de usuários fictícios em testes.
  */
 class UserDetailsImpl implements UserDetailsProjection {
+	private String name;
+	private String cpf;
 	private String username;
 	private String password;
 	private Long roleId;
@@ -51,11 +53,23 @@ class UserDetailsImpl implements UserDetailsProjection {
 	
 	public UserDetailsImpl() {}
 	
-	public UserDetailsImpl(String username, String password, Long roleId, String authority) {
+	public UserDetailsImpl(String name, String cpf, String username, String password, Long roleId, String authority) {
+		this.name = name;
+		this.cpf = cpf;
 		this.username = username;
 		this.password = password;
 		this.roleId = roleId;
 		this.authority = authority;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String getCpf() {
+		return cpf;
 	}
 
 	@Override

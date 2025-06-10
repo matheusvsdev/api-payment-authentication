@@ -1,0 +1,29 @@
+services:
+  backend:
+    build: .
+    container_name: api_payment_backend
+    ports:
+      - "8080:8080"
+    environment:
+      - APP_PROFILE=dev
+      - SQL_USERNAME=admin
+      - SQL_PASSWORD=123456
+    depends_on:
+      - mysql-container
+
+  mysql-container:
+    image: mysql:8
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: api_payment_rabbit
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 123456
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
