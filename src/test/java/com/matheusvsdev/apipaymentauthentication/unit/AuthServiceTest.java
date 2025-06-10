@@ -4,7 +4,7 @@ import com.matheusvsdev.apipaymentauthentication.entities.User;
 import com.matheusvsdev.apipaymentauthentication.factory.UserFactory;
 import com.matheusvsdev.apipaymentauthentication.services.AuthService;
 import com.matheusvsdev.apipaymentauthentication.services.UserService;
-import com.matheusvsdev.apipaymentauthentication.services.exceptions.ForbiddenException;
+import com.matheusvsdev.apipaymentauthentication.exceptions.ForbiddenException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

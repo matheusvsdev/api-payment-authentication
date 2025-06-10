@@ -57,7 +57,7 @@ public class WalletServiceTest {
         List<Wallet> wallets = Arrays.asList(walletPersonal, walletCompany);
         Mockito.when(walletRepository.findAllByUserId(user.getId())).thenReturn(wallets);
 
-        List<Wallet> userWallets = walletService.findByUserId(user.getId());
+        List<Wallet> userWallets = walletService.findAllByUserId(user.getId());
 
         Assertions.assertNotNull(userWallets);
         Assertions.assertEquals(2, userWallets.size());
