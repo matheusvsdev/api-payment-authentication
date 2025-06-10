@@ -22,6 +22,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     Optional<User> findByEmail(String email);
 
+	@Query("SELECT u FROM User u LEFT JOIN FETCH u.wallets WHERE u.cpf = :cpf")
+	Optional<User> findByCpfWithWallets(String cpf);
+
     /**
      * Busca um usuário e suas roles associadas usando projeção.
      * Retorna uma lista de `UserDetailsProjection`, garantindo eficiência na consulta.
