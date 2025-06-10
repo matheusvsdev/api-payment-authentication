@@ -3,6 +3,7 @@ package com.matheusvsdev.apipaymentauthentication.entities;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_transaction")
@@ -22,14 +23,17 @@ public class Transaction {
 
     private BigDecimal amount;
 
+    private LocalDateTime moment;
+
     public Transaction() {
     }
 
-    public Transaction(Long id, Wallet senderId, Wallet receiverId, BigDecimal amount) {
+    public Transaction(Long id, Wallet senderId, Wallet receiverId, BigDecimal amount, LocalDateTime moment) {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.amount = amount;
+        this.moment = moment;
     }
 
     public Long getId() {
@@ -58,5 +62,13 @@ public class Transaction {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public LocalDateTime getMoment() {
+        return moment;
+    }
+
+    public void setMoment(LocalDateTime moment) {
+        this.moment = moment;
     }
 }
