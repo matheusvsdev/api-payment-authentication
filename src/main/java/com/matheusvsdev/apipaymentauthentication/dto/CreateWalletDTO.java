@@ -2,6 +2,7 @@ package com.matheusvsdev.apipaymentauthentication.dto;
 
 import com.matheusvsdev.apipaymentauthentication.entities.Wallet;
 import com.matheusvsdev.apipaymentauthentication.entities.enums.WalletType;
+import jakarta.validation.Valid;
 
 import java.math.BigDecimal;
 
@@ -9,6 +10,8 @@ public class CreateWalletDTO {
 
 	private WalletType walletType;
 	private BigDecimal balance;
+
+	@Valid
 	private CreateUserDTO user;
 
 	public CreateWalletDTO() {
