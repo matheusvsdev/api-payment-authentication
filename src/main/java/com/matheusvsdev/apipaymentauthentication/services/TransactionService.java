@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class TransactionService {
@@ -27,11 +28,9 @@ public class TransactionService {
     @Transactional
     public TransactionDTO createTransaction(CreateTransactionDTO transactionDTO) {
 
-        Wallet sender = walletRepository.findById(transactionDTO.getSenderId())
-                .orElseThrow(() -> new NotFoundException("Carteira do remetente não encontrada"));
-
-        Wallet receiver = walletRepository.findById(transactionDTO.getReceiverId())
-                .orElseThrow(() -> new NotFoundException("Carteira de destino não encontrada"));
+        List<Wallet> wallets = findSenderAndReceiver(transactionDTO.getSenderId(), transactionDTO.getReceiverId());
+        Wallet sender = wallets.get(0);
+        Wallet receiver = wallets.get(1);
 
         calculate(sender, receiver, transactionDTO.getAmount());
 
@@ -44,6 +43,25 @@ public class TransactionService {
         newTransaction = transactionRepository.save(newTransaction);
 
         return new TransactionDTO(newTransaction);
+    }
+
+    private List<Wallet> findSenderAndReceiver(Long senderId, Long receiverId) {
+        List<Wallet> wallets = walletRepository.findAllById(List.of(
+                senderId,
+                receiverId
+        ));
+
+        Wallet sender = wallets.stream()
+                .filter(wallet -> wallet.getId().equals(senderId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Carteira do remetente não encontrada"));
+
+        Wallet receiver = wallets.stream()
+                .filter(wallet -> wallet.getId().equals(receiverId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Carteira do destinatário não encontrada"));
+
+        return List.of(sender, receiver);
     }
 
     private void calculate(Wallet sender, Wallet receiver, BigDecimal amount) {

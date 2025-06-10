@@ -16,7 +16,7 @@ public class CreateTransactionDTO {
     private Long receiverId;
 
     @NotNull(message = "O valor da transação é obrigatório")
-    @Positive(message = "O valor deve ser maior que zero")
+    @Positive(message = "O valor deve ser maior que R$0.00")
     private BigDecimal amount;
 
     private LocalDateTime moment;
