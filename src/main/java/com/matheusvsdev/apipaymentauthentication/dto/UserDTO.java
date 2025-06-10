@@ -1,34 +1,34 @@
 package com.matheusvsdev.apipaymentauthentication.dto;
 
 import com.matheusvsdev.apipaymentauthentication.entities.User;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class UserDTO {
 
     private Long id;
     private String name;
+    private String cpf;
     private String email;
-    private List<String> roles = new ArrayList<>();
+    private Set<RoleDTO> roles = new HashSet<>();
 
     public UserDTO() {
     }
 
-    public UserDTO(Long id, String name, String email) {
+    public UserDTO(Long id, String name, String cpf, String email) {
         this.id = id;
         this.name = name;
+        this.cpf = cpf;
         this.email = email;
     }
 
     public UserDTO(User entity) {
         id = entity.getId();
         name = entity.getName();
+        cpf = entity.getCpf();
         email = entity.getEmail();
-        for (GrantedAuthority role : entity.getAuthorities()) {
-            this.roles.add(role.getAuthority());
-        }
+        entity.getRoles().forEach(role -> this.roles.add(new RoleDTO(role)));
     }
 
     public Long getId() {
@@ -39,11 +39,15 @@ public class UserDTO {
         return name;
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
     public String getEmail() {
         return email;
     }
 
-    public List<String> getRoles() {
+    public Set<RoleDTO> getRoles() {
         return roles;
     }
 }

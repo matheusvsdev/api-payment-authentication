@@ -10,8 +10,11 @@ public class CreateWalletDTO {
 	private WalletType walletType;
 	private BigDecimal balance;
 	private CreateUserDTO user;
-	
-	public CreateWalletDTO(WalletType walletType, BigDecimal balance, CreateUserDTO user) {
+
+	public CreateWalletDTO() {
+	}
+
+	public CreateWalletDTO(WalletType walletType, CreateUserDTO user) {
 		this.walletType = walletType;
 		this.balance = BigDecimal.ZERO;
 		this.user = user;
