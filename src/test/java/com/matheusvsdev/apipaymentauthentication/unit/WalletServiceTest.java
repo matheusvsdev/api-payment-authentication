@@ -1,14 +1,12 @@
 package com.matheusvsdev.apipaymentauthentication.unit;
 
-import com.matheusvsdev.apipaymentauthentication.dto.CreateWalletDTO;
-import com.matheusvsdev.apipaymentauthentication.entities.User;
-import com.matheusvsdev.apipaymentauthentication.entities.Wallet;
-import com.matheusvsdev.apipaymentauthentication.entities.enums.WalletType;
-import com.matheusvsdev.apipaymentauthentication.factory.UserFactory;
-import com.matheusvsdev.apipaymentauthentication.factory.WalletFactory;
-import com.matheusvsdev.apipaymentauthentication.repositories.UserRepository;
-import com.matheusvsdev.apipaymentauthentication.repositories.WalletRepository;
-import com.matheusvsdev.apipaymentauthentication.services.WalletService;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,15 +14,26 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Arrays;
-import java.util.List;
+import com.matheusvsdev.apipaymentauthentication.dto.CreateWalletDTO;
+import com.matheusvsdev.apipaymentauthentication.dto.WalletDTO;
+import com.matheusvsdev.apipaymentauthentication.entities.User;
+import com.matheusvsdev.apipaymentauthentication.entities.Wallet;
+import com.matheusvsdev.apipaymentauthentication.entities.enums.WalletType;
+import com.matheusvsdev.apipaymentauthentication.exceptions.DuplicateWalletException;
+import com.matheusvsdev.apipaymentauthentication.exceptions.MaxWalletsLimitException;
+import com.matheusvsdev.apipaymentauthentication.factory.UserFactory;
+import com.matheusvsdev.apipaymentauthentication.factory.WalletFactory;
+import com.matheusvsdev.apipaymentauthentication.repositories.UserRepository;
+import com.matheusvsdev.apipaymentauthentication.repositories.WalletRepository;
+import com.matheusvsdev.apipaymentauthentication.services.WalletService;
 
 @ExtendWith(SpringExtension.class)
 public class WalletServiceTest {
-
-    @InjectMocks
+	
+	@InjectMocks
     private WalletService walletService;
 
     @Mock
@@ -33,48 +42,76 @@ public class WalletServiceTest {
     @Mock
     private WalletRepository walletRepository;
 
-    private User user;
-    private Wallet walletPersonal, walletCompany;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
+    private CreateWalletDTO walletDTO;
+    
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
 
-        user = UserFactory.createCustomClientUser(1L, "johndoe@example.com");
-        walletPersonal = WalletFactory.createCustomWallet(1L, WalletType.PERSONAL);
-        walletCompany = WalletFactory.createCustomWallet(2L, WalletType.COMPANY);
+        walletDTO = WalletFactory.createWalletDTO("12345678900", WalletType.PERSONAL);
 
-        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
-        Mockito.when(walletRepository.save(Mockito.any(Wallet.class))).thenReturn(walletPersonal); // Melhor estabilidade!
+        User mockUser = new User(1L, "John Doe", "12345678900", "johndoe@email.com", "encodedPassword");
 
+        Mockito.when(userRepository.findByCpfWithWallets(Mockito.anyString()))
+                .thenReturn(Optional.of(mockUser));
+
+        Mockito.when(walletRepository.save(Mockito.any(Wallet.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        Mockito.when(passwordEncoder.encode(Mockito.any(CharSequence.class)))
+                .thenReturn("encodedPassword");
     }
-
+    
     @Test
-    public void testCreateWalletForUser() {
+    void shouldCreateWalletSuccessfully() {
+        WalletDTO createdWallet = walletService.create(walletDTO);
 
-        walletService.create(new CreateWalletDTO(walletPersonal));
-        walletService.create(new CreateWalletDTO(walletCompany));
-
-        List<Wallet> wallets = Arrays.asList(walletPersonal, walletCompany);
-        Mockito.when(walletRepository.findAllByUserId(user.getId())).thenReturn(wallets);
-
-        List<Wallet> userWallets = walletService.findAllByUserId(user.getId());
-
-        Assertions.assertNotNull(userWallets);
-        Assertions.assertEquals(2, userWallets.size());
+        assertNotNull(createdWallet);
+        assertEquals(WalletType.PERSONAL, createdWallet.getWalletType());
     }
-
+    
     @Test
-    public void shouldThrowExceptionWhenUserTriesToCreateDuplicateWalletType() {
+    void shouldFailWhenUserAlreadyHasSameWalletType() {
+        User user = UserFactory.createClientUser();
+        Wallet existingWallet = WalletFactory.createWallet(user, WalletType.PERSONAL);
+        user.getWallets().add(existingWallet);
+        
+        Mockito.when(userRepository.findByCpfWithWallets(Mockito.anyString()))
+        	.thenReturn(Optional.of(user));
 
-        Mockito.when(walletRepository.existsByUserIdAndWalletType(user.getId(), WalletType.PERSONAL)).thenReturn(true);
+        // Criando o DTO para tentar adicionar uma carteira duplicada
+        CreateWalletDTO walletDTO = WalletFactory.createWalletDTO(user.getCpf(), WalletType.PERSONAL);
 
-        CreateWalletDTO duplicateWalletDTO = new CreateWalletDTO(walletPersonal);
-
-        Exception exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            walletService.create(duplicateWalletDTO);
+        // Confirma que a exceção esperada está sendo lançada
+        Assertions.assertThrows(DuplicateWalletException.class, () -> {
+            walletService.create(walletDTO);
         });
 
-        Assertions.assertEquals("Usuário já possui uma carteira do tipo PERSONAL", exception.getMessage());
-
+        Mockito.verify(userRepository, Mockito.times(1)).findByCpfWithWallets(Mockito.anyString());
     }
+    
+    @Test
+    void shouldFailWhenUserAlreadyHasMaxWallets() {
+        User user = UserFactory.createClientUser();
+        Wallet walletPersonal = WalletFactory.createWallet(user, WalletType.PERSONAL);
+        Wallet walletCompany = WalletFactory.createWallet(user, WalletType.COMPANY);
+        user.getWallets().addAll(Arrays.asList(walletPersonal, walletCompany));
+        
+        Mockito.when(userRepository.findByCpfWithWallets(Mockito.anyString()))
+        	.thenReturn(Optional.of(user));
+
+        Mockito.when(walletRepository.findAllByUserId(Mockito.anyLong()))
+        	.thenReturn(List.of(walletPersonal, walletCompany));
+
+        CreateWalletDTO walletDTO = WalletFactory.createWalletDTO(user.getCpf(), WalletType.COMPANY);
+
+        Assertions.assertThrows(MaxWalletsLimitException.class, () -> {
+            walletService.create(walletDTO);
+        });
+
+        Mockito.verify(userRepository, Mockito.times(1)).findByCpfWithWallets(Mockito.anyString());
+    }
+
 }

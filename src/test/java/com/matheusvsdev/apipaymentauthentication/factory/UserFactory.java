@@ -14,7 +14,7 @@ public class UserFactory {
      * Retorna um objeto `User` com ID fixo e role CLIENT.
      */
 	public static User createClientUser() {
-		User user = new User(1L, "John Doe", "11122233344", "johndoe@example.com", "password123");
+		User user = new User(1L, "John Doe", "11122233344", "johndoe@example.com", "password");
 		user.addRole(new Role(1L, "ROLE_CLIENT"));		
 		return user;
 	}
@@ -24,7 +24,7 @@ public class UserFactory {
      * Retorna um objeto `User` com ID fixo e role ADMIN.
      */
 	public static User createAdminUser() {
-		User admin = new User(2L, "Jane Doe", "33366655511", "janedoe@example.com", "password123");
+		User admin = new User(2L, "Jane Doe", "33366655511", "janedoe@example.com", "password");
 		admin.addRole(new Role(2L, "ROLE_ADMIN"));		
 		return admin;
 	}
@@ -38,7 +38,7 @@ public class UserFactory {
      * @return Usuário CLIENT personalizado
      */
 	public static User createCustomClientUser(Long id, String username) {
-		User user = new User(id, "John Doe", "11122233344", username, "password123");
+		User user = new User(id, "John Doe", "11122233344", username, "password");
 		user.addRole(new Role(1L, "ROLE_CLIENT"));		
 		return user;
 	}
@@ -51,8 +51,8 @@ public class UserFactory {
      * @param username E-mail do usuário
      * @return Usuário ADMIN personalizado
      */
-	public static User createCustomAdminUser(Long id, String username) {
-		User admin = new User(id, "Jane Doe", "33366655511", username, "password123");
+	public static User createCustomAdminUser(Long id, String cpf, String username) {
+		User admin = new User(id, "Jane Doe", cpf, username, "password");
 		admin.addRole(new Role(2L, "ROLE_ADMIN"));
 		return admin;
 	}	

@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
@@ -36,6 +37,9 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+	@Mock
+	private PasswordEncoder passwordEncoder;
     
     @Mock
 	private CustomUserUtil userUtil;
@@ -74,6 +78,8 @@ public class UserServiceTest {
     	
 		Mockito.when(userRepository.findByEmail(nonExistingUsername))
 				.thenReturn(Optional.empty()); // Usuário não existe
+
+		Mockito.when(passwordEncoder.encode(Mockito.any(CharSequence.class))).thenReturn("encodedPassword");
     }
 
     /**

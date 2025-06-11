@@ -20,7 +20,7 @@ public class UserDetailsFactory {
      */
 	public static List<UserDetailsProjection> createCustomClientUser(String username) {
 		List<UserDetailsProjection> list = new ArrayList<>();
-		list.add(new UserDetailsImpl("John Doe", "11122233344", username, "password123", 1L, "ROLE_CLIENT"));
+		list.add(new UserDetailsImpl("John Doe", "11122233344", username, "password", 1L, "ROLE_CLIENT"));
 		return list;
 	}
 	
@@ -33,7 +33,7 @@ public class UserDetailsFactory {
      */
 	public static List<UserDetailsProjection> createCustomAdminUser(String username) {
 		List<UserDetailsProjection> list = new ArrayList<>();
-		list.add(new UserDetailsImpl("Jane Doe", "33366655511", username, "password123", 1L, "ROLE_ADMIN"));
+		list.add(new UserDetailsImpl("Jane Doe", "33366655511", username, "password", 1L, "ROLE_ADMIN"));
 		return list;
 	}
 

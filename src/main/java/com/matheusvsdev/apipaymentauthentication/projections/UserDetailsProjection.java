@@ -10,8 +10,6 @@ public interface UserDetailsProjection {
 	// Utilizado para autenticação e identificação
 	String getName();
 
-	// Retorna o nome de usuário
-	// Utilizado para autenticação e identificação
 	String getCpf();
 
     // Retorna o nome de usuário
