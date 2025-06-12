@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 public class WalletService {
@@ -61,11 +60,6 @@ public class WalletService {
 
         return new WalletDTO(newWallet);
 
-    }
-
-    @Transactional(readOnly = true)
-    public List<Wallet> findAllByUserId(Long userId) {
-        return walletRepository.findAllByUserId(userId);
     }
 
     private User createUser(CreateUserDTO userDTO) {

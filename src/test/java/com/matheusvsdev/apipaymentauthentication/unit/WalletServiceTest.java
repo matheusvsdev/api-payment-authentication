@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -75,7 +74,7 @@ public class WalletServiceTest {
     @Test
     void shouldFailWhenUserAlreadyHasSameWalletType() {
         User user = UserFactory.createClientUser();
-        Wallet existingWallet = WalletFactory.createWallet(user, WalletType.PERSONAL);
+        Wallet existingWallet = WalletFactory.createPersonalWallet();
         user.getWallets().add(existingWallet);
         
         Mockito.when(userRepository.findByCpfWithWallets(Mockito.anyString()))
@@ -95,15 +94,12 @@ public class WalletServiceTest {
     @Test
     void shouldFailWhenUserAlreadyHasMaxWallets() {
         User user = UserFactory.createClientUser();
-        Wallet walletPersonal = WalletFactory.createWallet(user, WalletType.PERSONAL);
-        Wallet walletCompany = WalletFactory.createWallet(user, WalletType.COMPANY);
+        Wallet walletPersonal = WalletFactory.createPersonalWallet();
+        Wallet walletCompany = WalletFactory.createCompanyWallet();
         user.getWallets().addAll(Arrays.asList(walletPersonal, walletCompany));
         
         Mockito.when(userRepository.findByCpfWithWallets(Mockito.anyString()))
         	.thenReturn(Optional.of(user));
-
-        Mockito.when(walletRepository.findAllByUserId(Mockito.anyLong()))
-        	.thenReturn(List.of(walletPersonal, walletCompany));
 
         CreateWalletDTO walletDTO = WalletFactory.createWalletDTO(user.getCpf(), WalletType.COMPANY);
 
@@ -113,5 +109,4 @@ public class WalletServiceTest {
 
         Mockito.verify(userRepository, Mockito.times(1)).findByCpfWithWallets(Mockito.anyString());
     }
-
 }

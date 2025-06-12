@@ -60,7 +60,7 @@ public class UserServiceTest {
     	nonExistingUsername = "invaliduser@example.com";
     	
     	// Cria um usuário fictício com a role CLIENT usando Factory
-    	user = UserFactory.createCustomClientUser(1L, existingUsername);
+    	user = UserFactory.createCustomPersonalUser(1L, existingUsername);
         
     	// Simula detalhes de usuário com role ADMIN
     	userDetails = UserDetailsFactory.createCustomAdminUser(existingUsername);

@@ -37,8 +37,8 @@ public class AuthServiceTest {
     @BeforeEach
     void setUp() {
     	admin = UserFactory.createAdminUser();
-		selfClient = UserFactory.createCustomClientUser(1L, "John Doe");
-		otherClient = UserFactory.createCustomClientUser(2L, "Jane Doe");
+		selfClient = UserFactory.createCustomPersonalUser(1L, "John Doe");
+		otherClient = UserFactory.createCustomPersonalUser(2L, "Jane Doe");
     }
 
     /**

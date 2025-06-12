@@ -60,14 +60,14 @@ public class TransactionServiceTest {
 
     @Test
     void shouldCreateTransactionSuccessfully() {
-        CreateTransactionDTO transactionDTO = TransactionFactory.createTransactionDTO(1L, 2L, BigDecimal.valueOf(50));
+        CreateTransactionDTO transactionDTO = TransactionFactory.createTransactionDTO();
 
         TransactionDTO createdTransaction = transactionService.createTransaction(transactionDTO);
 
         assertNotNull(createdTransaction);
-        assertEquals(BigDecimal.valueOf(50), createdTransaction.getAmount());
-        assertEquals(senderWallet.getBalance(), BigDecimal.valueOf(50));
-        assertEquals(receiverWallet.getBalance(), BigDecimal.valueOf(50));
+        assertEquals(BigDecimal.valueOf(100), createdTransaction.getAmount());
+        assertEquals(senderWallet.getBalance(), BigDecimal.valueOf(0));
+        assertEquals(receiverWallet.getBalance(), BigDecimal.valueOf(100));
 
         Mockito.verify(walletRepository, Mockito.times(1)).findAllById(Mockito.anyList());
         Mockito.verify(transactionRepository, Mockito.times(1)).save(Mockito.any(Transaction.class));
@@ -84,7 +84,7 @@ public class TransactionServiceTest {
         Mockito.when(walletRepository.findAllById(List.of(1L, 2L)))
                 .thenReturn(List.of(senderWallet, receiverWallet)); // Garantindo que ambas as carteiras existem
 
-        CreateTransactionDTO transactionDTO = TransactionFactory.createTransactionDTO(1L, 2L, BigDecimal.valueOf(50));
+        CreateTransactionDTO transactionDTO = TransactionFactory.createCustomTransactionDTO(1L, 2L, BigDecimal.valueOf(50));
 
         Assertions.assertThrows(InvalidTransactionException.class, () -> {
             transactionService.createTransaction(transactionDTO);
@@ -103,7 +103,7 @@ public class TransactionServiceTest {
         Mockito.when(walletRepository.findAllById(Mockito.anyList()))
                 .thenReturn(Collections.emptyList()); // Simulando carteiras inexistentes
 
-        CreateTransactionDTO transactionDTO = TransactionFactory.createTransactionDTO(1L, 2L, BigDecimal.valueOf(50));
+        CreateTransactionDTO transactionDTO = TransactionFactory.createCustomTransactionDTO(1L, 2L, BigDecimal.valueOf(50));
 
         Assertions.assertThrows(NotFoundException.class, () -> {
             transactionService.createTransaction(transactionDTO);
@@ -115,12 +115,12 @@ public class TransactionServiceTest {
 
     @Test
     void shouldFailWhenSenderAndReceiverAreSame() {
-        Wallet sameWallet = WalletFactory.createWallet(UserFactory.createClientUser(), WalletType.PERSONAL);
+        Wallet sameWallet = WalletFactory.createPersonalWallet();
 
         Mockito.when(walletRepository.findAllById(List.of(1L, 1L)))
                 .thenReturn(List.of(sameWallet));
 
-        CreateTransactionDTO transactionDTO = TransactionFactory.createTransactionDTO(1L, 1L, BigDecimal.valueOf(50));
+        CreateTransactionDTO transactionDTO = TransactionFactory.createCustomTransactionDTO(1L, 1L, BigDecimal.valueOf(50));
 
         Assertions.assertThrows(InvalidTransactionException.class, () -> {
             transactionService.createTransaction(transactionDTO);

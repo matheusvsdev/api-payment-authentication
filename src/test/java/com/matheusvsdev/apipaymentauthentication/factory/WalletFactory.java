@@ -14,6 +14,26 @@ import com.matheusvsdev.apipaymentauthentication.entities.enums.WalletType;
  * Facilita a geração de carteira padrão e personalizadas para diversos cenários.
  */
 public class WalletFactory {
+
+	/**
+	 * Cria uma Company Wallet associada a um usuário.
+	 * @return `Wallet` pronta para testes
+	 */
+	public static Wallet createPersonalWallet() {
+		return new Wallet(1L, WalletType.PERSONAL, BigDecimal.ZERO, UserFactory.createClientUser());
+	}
+
+	/**
+	 * Cria uma Personal Wallet associada a um usuário.
+	 * @return  `Wallet` pronta para testes
+	 */
+	public static Wallet createCompanyWallet() {
+		return new Wallet(2L, WalletType.COMPANY, BigDecimal.ZERO, UserFactory.createClientUser());
+	}
+
+	public static Wallet createCustomWallet(Long id, User user, WalletType walletType) {
+		return new Wallet(id, walletType, BigDecimal.ZERO, user);
+	}
 	
 	/**
      * Cria um `CreateWalletDTO` simulando uma solicitação de carteira.
@@ -22,7 +42,7 @@ public class WalletFactory {
      * @return `CreateWalletDTO` pronto para testes
      */
 	public static CreateWalletDTO createWalletDTO(String cpf, WalletType walletType) {
-		CreateUserDTO userDTO = new CreateUserDTO("John Doe", cpf, "johndoe@example.com", "password");
+		CreateUserDTO userDTO = new CreateUserDTO("John Doe", cpf, "johndoe@example.com", "Abc123456");
 		return new CreateWalletDTO(walletType, userDTO);
 	}
 	
@@ -34,19 +54,5 @@ public class WalletFactory {
      */
 	public static WalletDTO createWalletDTOFromEntity(Wallet wallet) {		
 		return new WalletDTO(wallet);
-	}
-	
-	/**
-     * Cria uma Wallet associada a um usuário.
-     * @param user Usuário dono da carteira
-     * @param walletType Tipo da carteira
-     * @return `Wallet` pronta para testes
-     */
-	public static Wallet createWallet(User user, WalletType walletType) {
-		return new Wallet(1L, walletType, BigDecimal.ZERO, user);
-	}
-
-	public static Wallet createCustomWallet(Long id, User user, WalletType walletType) {
-		return new Wallet(id, walletType, BigDecimal.ZERO, user);
 	}
 }

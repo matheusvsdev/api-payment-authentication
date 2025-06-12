@@ -11,14 +11,23 @@ import java.time.LocalDateTime;
 public class TransactionFactory {
 
     /**
-     * Cria um `CreateTransactionDTO` para simular requisições de transações nos testes.
+     * Cria um `CreateTransactionDTO` padrão para simular requisições de transações nos testes.
+     *
+     * @return `CreateTransactionDTO` pronto para testes
+     */
+    public static CreateTransactionDTO createTransactionDTO() {
+        return new CreateTransactionDTO(1L, 2L, BigDecimal.valueOf(100));
+    }
+
+    /**
+     * Cria um `CreateCustomTransactionDTO` customizado para simular requisições de transações nos testes.
      *
      * @param senderId ID da carteira remetente
      * @param receiverId ID da carteira destinatária
      * @param amount Valor da transação
-     * @return `CreateTransactionDTO` pronto para testes
+     * @return `CreateCustomTransactionDTO` pronto para testes
      */
-    public static CreateTransactionDTO createTransactionDTO(Long senderId, Long receiverId, BigDecimal amount) {
+    public static CreateTransactionDTO createCustomTransactionDTO(Long senderId, Long receiverId, BigDecimal amount) {
         return new CreateTransactionDTO(senderId, receiverId, amount);
     }
 
@@ -31,7 +40,7 @@ public class TransactionFactory {
      * @param amount Valor da transação
      * @return `Transaction` pronta para testes
      */
-    public static Transaction createTransaction(Wallet sender, Wallet receiver, BigDecimal amount) {
+    public static Transaction createCustomTransaction(Wallet sender, Wallet receiver, BigDecimal amount) {
         return new Transaction(1L, sender, receiver, amount, LocalDateTime.now());
     }
 
