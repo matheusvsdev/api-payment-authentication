@@ -40,8 +40,7 @@ public class TransactionServiceTest {
     @Mock
     private TransactionRepository transactionRepository;
 
-    private Wallet senderWallet;
-    private Wallet receiverWallet;
+    private Wallet senderWallet, receiverWallet;
 
     @BeforeEach
     void setUp() {
