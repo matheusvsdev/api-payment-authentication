@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.5.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/> <!-- lookup parent from a repository -->
     </parent>
     <groupId>com.matheusvsdev</groupId>
     <artifactId>api-payment-authentication</artifactId>
@@ -37,10 +37,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -103,6 +99,47 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.10</version>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            com/matheusvsdev/apipaymentauthentication/ApiPaymentAuthenticationApplication.class</exclude>
+                        <exclude>
+                            com/matheusvsdev/apipaymentauthentication/config/**</exclude>
+                        <exclude>
+                            com/matheusvsdev/apipaymentauthentication/entities/**</exclude>
+                        <exclude>
+                            com/matheusvsdev/apipaymentauthentication/dto/**</exclude>
+                        <exclude>
+                            com/matheusvsdev/apipaymentauthentication/controllers/handlers/**</exclude>
+                        <exclude>
+                            com/matheusvsdev/apipaymentauthentication/exceptions/**</exclude>
+                        <exclude>
+                            com/matheusvsdev/apipaymentauthentication/utils/**</exclude>
+                        <exclude>
+                            com/matheusvsdev/apipaymentauthentication/controllers/**</exclude>s </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/jacoco-report</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
