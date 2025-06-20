@@ -3,6 +3,7 @@ package com.matheusvsdev.apipaymentauthentication.services;
 import com.matheusvsdev.apipaymentauthentication.dto.CreateTransactionDTO;
 import com.matheusvsdev.apipaymentauthentication.dto.TransactionDTO;
 import com.matheusvsdev.apipaymentauthentication.entities.Transaction;
+import com.matheusvsdev.apipaymentauthentication.entities.User;
 import com.matheusvsdev.apipaymentauthentication.entities.Wallet;
 import com.matheusvsdev.apipaymentauthentication.exceptions.InvalidTransactionException;
 import com.matheusvsdev.apipaymentauthentication.exceptions.NotFoundException;
@@ -25,10 +26,14 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private UserService userService;
+
     @Transactional
     public TransactionDTO createTransaction(CreateTransactionDTO transactionDTO) {
+        User ownUser = userService.authenticated();
 
-        List<Wallet> wallets = findSenderAndReceiver(transactionDTO.getSenderId(), transactionDTO.getReceiverId());
+        List<Wallet> wallets = findSenderAndReceiver(ownUser.getId(), transactionDTO.getReceiverId());
         Wallet sender = wallets.get(0);
         Wallet receiver = wallets.get(1);
 

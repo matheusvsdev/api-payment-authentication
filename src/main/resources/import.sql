@@ -1,5 +1,5 @@
-INSERT INTO tb_user (name, cpf, email, password) VALUES ('John Doe', '11100033399', 'johndoe@example.com', '$2a$12$zD4HWBJcgh.NotXLjRj4BeYFISzF.EkIxdGqx7VZEraklfZ');
-INSERT INTO tb_user (name, cpf, email, password) VALUES ('Jane Doe', '44488822211', 'jane@example.com', '$2a$12$zD4HWBJcgh.NotXLjRj4BeYFISzF.EkIxdGqx7VZEraklfZ');
+INSERT INTO tb_user (name, cpf, email, password) VALUES ('John Doe', '11100033399', 'johndoe@example.com', '$2a$12$s1XiE1EIjnmISX3c/qfma.JVUjF9Y0.tfYo7R2jHQUpnviNO46UCa');
+INSERT INTO tb_user (name, cpf, email, password) VALUES ('Jane Doe', '44488822211', 'jane@example.com', '$2a$12$s1XiE1EIjnmISX3c/qfma.JVUjF9Y0.tfYo7R2jHQUpnviNO46UCa');
 
 INSERT INTO tb_role (authority) VALUES ('CLIENT');
 INSERT INTO tb_role (authority) VALUES ('ADMIN');

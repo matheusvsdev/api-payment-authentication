@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 public class CreateTransactionDTO {
 
-    @NotNull(message = "O ID do remetente é obrigatório")
     private Long senderId;
 
     @NotNull(message = "O ID do destinatário é obrigatório")

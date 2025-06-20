@@ -13,6 +13,7 @@ import com.matheusvsdev.apipaymentauthentication.factory.WalletFactory;
 import com.matheusvsdev.apipaymentauthentication.repositories.TransactionRepository;
 import com.matheusvsdev.apipaymentauthentication.repositories.WalletRepository;
 import com.matheusvsdev.apipaymentauthentication.services.TransactionService;
+import com.matheusvsdev.apipaymentauthentication.services.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,9 @@ public class TransactionServiceTest {
     @Mock
     private TransactionRepository transactionRepository;
 
+    @Mock
+    private UserService userService;
+
     private Wallet senderWallet, receiverWallet;
 
     @BeforeEach
@@ -59,6 +63,9 @@ public class TransactionServiceTest {
 
     @Test
     void shouldCreateTransactionSuccessfully() {
+
+        Mockito.when(userService.authenticated()).thenReturn(senderWallet.getUser());
+
         CreateTransactionDTO transactionDTO = TransactionFactory.createTransactionDTO();
 
         TransactionDTO createdTransaction = transactionService.createTransaction(transactionDTO);
@@ -76,6 +83,8 @@ public class TransactionServiceTest {
     void shouldFailWhenSenderHasInsufficientBalance() {
         Wallet senderWallet = WalletFactory.createCustomWallet(1L, UserFactory.createClientUser(), WalletType.PERSONAL);
         senderWallet.setBalance(BigDecimal.valueOf(30)); // Simulando saldo insuficiente
+
+        Mockito.when(userService.authenticated()).thenReturn(senderWallet.getUser());
 
         Wallet receiverWallet = WalletFactory.createCustomWallet(2L, UserFactory.createAdminUser(), WalletType.COMPANY);
 
@@ -99,6 +108,9 @@ public class TransactionServiceTest {
 
     @Test
     void shouldFailWhenWalletsNotFound() {
+
+        Mockito.when(userService.authenticated()).thenReturn(senderWallet.getUser());
+
         Mockito.when(walletRepository.findAllById(Mockito.anyList()))
                 .thenReturn(Collections.emptyList()); // Simulando carteiras inexistentes
 
@@ -115,6 +127,8 @@ public class TransactionServiceTest {
     @Test
     void shouldFailWhenSenderAndReceiverAreSame() {
         Wallet sameWallet = WalletFactory.createPersonalWallet();
+
+        Mockito.when(userService.authenticated()).thenReturn(sameWallet.getUser());
 
         Mockito.when(walletRepository.findAllById(List.of(1L, 1L)))
                 .thenReturn(List.of(sameWallet));

@@ -6,6 +6,7 @@ import com.matheusvsdev.apipaymentauthentication.services.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
+    @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN')")
     @PostMapping
     public ResponseEntity<TransactionDTO> createWallet(@Valid @RequestBody CreateTransactionDTO transactionDTO) {
         TransactionDTO newTransaction = transactionService.createTransaction(transactionDTO);

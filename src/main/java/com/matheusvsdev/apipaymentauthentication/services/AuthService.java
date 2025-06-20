@@ -22,7 +22,7 @@ public class AuthService {
 		User me = userService.authenticated();
 		
 		// Se for ADMIN, acesso é liberado
-		if (me.hasRole("ROLE_ADMIN")) {
+		if (me.hasRole("ADMIN")) {
 			return;
 		}
 		

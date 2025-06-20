@@ -12,6 +12,8 @@ import com.matheusvsdev.apipaymentauthentication.factory.TransactionFactory;
 import com.matheusvsdev.apipaymentauthentication.factory.UserFactory;
 import com.matheusvsdev.apipaymentauthentication.factory.WalletFactory;
 import com.matheusvsdev.apipaymentauthentication.services.TransactionService;
+import com.matheusvsdev.apipaymentauthentication.services.UserService;
+import com.matheusvsdev.apipaymentauthentication.util.TokenUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -43,14 +45,30 @@ public class TransactionControllerTest {
     @MockitoBean
     private TransactionService transactionService;
 
+    @MockitoBean
+    private UserService userService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+
     private Long nonExistingId;
+    private String senderUsername, senderPassword, receiverUsername, receiverPassword;
+    private String senderToken, invalidToken;
     private Wallet sender, receiver;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+
+        senderUsername = "johndoe@example.com";
+        senderPassword = "Abc12345";
+
+        Mockito.when(userService.loadUserByUsername(senderUsername)).thenReturn(UserFactory.createClientUser());
+
+        senderToken = tokenUtil.obtainAccessToken(mockMvc, senderUsername, senderPassword);
+        invalidToken = senderToken + "xpto"; // invalid token
 
         nonExistingId = 100L;
 
@@ -87,11 +105,9 @@ public class TransactionControllerTest {
                 sender.getId(), receiver.getId(), BigDecimal.valueOf(50)
         );
 
-        // Loga o JSON gerado para verificar se os valores estão corretos
-        System.out.println("JSON enviado: " + objectMapper.writeValueAsString(transactionDTO));
-
         ResultActions result =
                 mockMvc.perform(post("/transaction")
+                        .header("Authorization", "Bearer " + senderToken)
                         .content(objectMapper.writeValueAsString(transactionDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));
@@ -119,6 +135,7 @@ public class TransactionControllerTest {
         System.out.println("JSON enviado: " + objectMapper.writeValueAsString(transactionDTO));
 
         mockMvc.perform(post("/transaction")
+                        .header("Authorization", "Bearer " + senderToken)
                         .content(objectMapper.writeValueAsString(transactionDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -135,6 +152,7 @@ public class TransactionControllerTest {
         System.out.println("JSON enviado: " + objectMapper.writeValueAsString(transactionDTO));
 
         mockMvc.perform(post("/transaction")
+                        .header("Authorization", "Bearer " + senderToken)
                         .content(objectMapper.writeValueAsString(transactionDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -154,6 +172,7 @@ public class TransactionControllerTest {
                 nonExistingId, receiver.getId(), BigDecimal.valueOf(50));
 
         mockMvc.perform(post("/transaction")
+                        .header("Authorization", "Bearer " + senderToken)
                         .content(objectMapper.writeValueAsString(transactionDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -173,6 +192,7 @@ public class TransactionControllerTest {
                 sender.getId(), nonExistingId, BigDecimal.valueOf(50));
 
         mockMvc.perform(post("/transaction")
+                        .header("Authorization", "Bearer " + senderToken)
                         .content(objectMapper.writeValueAsString(transactionDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))

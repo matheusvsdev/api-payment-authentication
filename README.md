@@ -1,8 +1,8 @@
 # API Payment Authentication – Segurança, Transações & Carteiras Digitais
 
-**Autenticação, segurança reforçada, gestão de transações financeiras**
+**Segurança, Monitoramento e Gestão de Transações financeiras**
 
-Este sistema foi desenvolvido para garantir **transações seguras**, **processamento assíncrono de eventos** e um **controle eficiente de carteiras digitais (`Wallet`)**, utilizando **Spring Security + JWT** e um **módulo completo de transações financeiras**.
+Este sistema foi desenvolvido para garantir transações seguras, observabilidade com métricas em tempo real e um controle eficiente de carteiras digitais (Wallet), utilizando Spring Security + JWT, Spring Boot Actuator, Prometheus e Grafana.
 
 **Principais funcionalidades:**
 
@@ -14,7 +14,7 @@ Este sistema foi desenvolvido para garantir **transações seguras**, **processa
 
 **Módulo de Transações Financeiras** → Transferências entre carteiras com validações e controle de saldo.
 
-**Sistema de Notificações** → Cada ação relevante do usuário gera **notificações em tempo real**.  
+**Monitoramento com Prometheus e Grafana** → Métricas expostas via Spring Actuator e visualizadas com dashboards no Grafana.
 
 **Documentação Swagger** → API totalmente documentada e pronta para uso!
 
@@ -25,9 +25,32 @@ Este sistema foi desenvolvido para garantir **transações seguras**, **processa
 **Spring Boot** → Framework poderoso para back-end.  
 **Spring Security + JWT** → Autenticação e segurança com boas práticas.  
 **Spring Data JPA / Hibernate** → Gerenciamento eficiente de dados.  
+**Spring Boot Actuator** → Exposição de métricas para monitoramento.  
 **H2 Database** → Banco de dados leve e ágil para testes.  
 **Mockito/JUnit** → Testes unitários completos e mockados.  
+**Prometheus + Grafana** → Coleta e visualização de métricas em tempo real.  
 **Swagger** → API documentada e intuitiva para desenvolvedores.
+
+---
+
+## Monitoramento com Spring Actuator, Prometheus e Grafana
+
+A aplicação conta com integração completa para **monitoramento e observabilidade**, utilizando:
+
+- **Spring Boot Actuator** para exposição de métricas.
+- **Prometheus** para coleta periódica dessas métricas.
+- **Grafana** para visualização em tempo real, com dashboards personalizáveis.
+
+Métricas disponíveis:
+- Status de saúde da aplicação (`/actuator/health`)
+- Uso da JVM, memória, threads e endpoints (`/actuator/metrics`)
+- Métricas financeiras personalizadas das transações
+
+Após subir os containers, acesse:
+- Prometheus: [http://localhost:9090](http://localhost:9090)
+- Grafana: [http://localhost:3000](http://localhost:3000)*(deve baixar a imagem e criar o container, não foi colocado no projeto)*
+
+> Dica: O dashboard do Grafana já vem pronto para visualizar os dados coletados da sua aplicação em tempo real!
 
 ---
 
