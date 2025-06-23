@@ -29,17 +29,19 @@ Esta aplicação utiliza o Swagger para fornecer uma interface de documentação
 
 A documentação do Swagger oferece uma visão detalhada dos endpoints disponíveis, dos parâmetros que eles aceitam e das respostas esperadas, tudo em uma interface gráfica acessível diretamente pelo navegador.
 
-#### Exemplo de Requisição ####
+#### Exemplo de Requisição no Postman para Login ####
 
 - **Endpoint: POST** /oauth2/token
-- **x-www-form-urlencoded**:
+- **Content-Typex**: application/x-www-form-urlencoded
+- **Authorization**: Basic base64(myclientid:mysecretkey)
+- **Body (x-www-form-urlencoded)**:
 
 
     Key        |      Value
     -----------|------------------------
     username   |     email@example.com
     password   |     Senha12345
-    grant_type |     "password"
+    grant_type |     password
 
 Resposta no postman:
 
@@ -50,6 +52,8 @@ Resposta no postman:
     }
 
 Copie o "access_token" e cole no em Authorize no Swagger para liberar os endpoints de Transação
+
+>A autenticação do client é feita via header HTTP Authorization: Basic ..., usando client_id e client_secret codificados em Base64.
 
 - **Endpoint: POST** /transaction
 - **Body**:
