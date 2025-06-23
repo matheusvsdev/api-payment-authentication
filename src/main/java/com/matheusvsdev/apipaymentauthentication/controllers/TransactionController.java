@@ -3,6 +3,10 @@ package com.matheusvsdev.apipaymentauthentication.controllers;
 import com.matheusvsdev.apipaymentauthentication.dto.CreateTransactionDTO;
 import com.matheusvsdev.apipaymentauthentication.dto.TransactionDTO;
 import com.matheusvsdev.apipaymentauthentication.services.TransactionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +21,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/transaction")
+@Tag(name = "Transação", description = "Operações relacionadas a transações financeiras")
 public class TransactionController {
 
     @Autowired
@@ -24,7 +29,12 @@ public class TransactionController {
 
     @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN')")
     @PostMapping
-    public ResponseEntity<TransactionDTO> createWallet(@Valid @RequestBody CreateTransactionDTO transactionDTO) {
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "Realiza transação", description = "Método para realizar transação financeira")
+    @ApiResponse(responseCode = "201", description = "Transação realizada com sucesso")
+    @ApiResponse(responseCode = "400", description = "Saldo insuficiente")
+    @ApiResponse(responseCode = "404", description = "Carteira de destino não encontrada")
+    public ResponseEntity<TransactionDTO> createTransaction(@Valid @RequestBody CreateTransactionDTO transactionDTO) {
         TransactionDTO newTransaction = transactionService.createTransaction(transactionDTO);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()

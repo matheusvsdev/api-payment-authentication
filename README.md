@@ -20,6 +20,69 @@ Este sistema foi desenvolvido para garantir transações seguras, observabilidad
 
 ---
 
+## Documentação da API com Swagger
+
+Esta aplicação utiliza o Swagger para fornecer uma interface de documentação e testes da API.
+
+### Acessando a Documentação da API
+- **Swagger UI: http://localhost:8080/api-payment-authentication/swagger-ui.html**
+
+A documentação do Swagger oferece uma visão detalhada dos endpoints disponíveis, dos parâmetros que eles aceitam e das respostas esperadas, tudo em uma interface gráfica acessível diretamente pelo navegador.
+
+#### Exemplo de Requisição ####
+
+- **Endpoint: POST** /oauth2/token
+- **x-www-form-urlencoded**:
+
+
+    Key        |      Value
+    -----------|------------------------
+    username   |     email@example.com
+    -----------|------------------------
+    password   |      Senha12345
+    -----------|------------------------
+    grant_type |      "password"
+
+Resposta no postman:
+
+    {
+        "access_token": "eyJraWQiOiI2NDc5YWQxOS0wY2MyLTRhNGYtYWNkNy1lZWVlNjk0NjEwMGIiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJteWNsaWVudGlkIiwiYXVkIjoibXljbGllbnRpZCIsIm5iZiI6MTc1MDY4NjI3MSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwIiwiZXhwIjoxNzUwNzcyNjcxLCJpYXQiOjE3NTA2ODYyNzEsImp0aSI6IjEwOGUyMzZlLTc5NzYtNDE1MS1hM2JmLTUxNjJkYzE4YzZhOCIsImF1dGhvcml0aWVzIjpbIkNMSUVOVCJdLCJ1c2VybmFtZSI6ImpvaG5kb2VAZXhhbXBsZS5jb20ifQ.sjZxs4kShoCUnPSS5R38QtX-LMDpJj9JNp7vSQp0xtzg8L_ziNr29p4Be7FjdF3Ji0C2pJoyY92xVR5cTtSyZavS6sjp7lWI6VzY7ENxrFCz20ym_SgSPP1jaW8RuntZ0ZCtJFlG-HMK7IcgWtkxJxFWZmVat9pB9fBOr-CXBua0cOXodHX8Gn3F12sH2XpOmEZnCL3UdaFvNNH3vbw2W8I76YnBeLVTsfRPY-nj5-tr9KKqE6EBRtkwWHZch0sLxoSun9GrElz9-umoAnErAmbJ3Ufu0j6C-b93JDU1W4fC9xqlhmUt642QqAaFaVby2A_UZ2vBErBslEwY6DU12w",
+        "token_type": "Bearer",
+        "expires_in": 86399
+    }
+
+Copie o "access_token" e cole no em Authorize no Swagger para liberar os endpoints de Transação
+
+- **Endpoint: POST** /transaction
+- **Body**:
+
+
+    {
+        "receiverId": 2,
+        "amount": 1000
+    }
+
+A resposta esperada para realizar uma transação seria:
+
+    {
+        "id": 3,
+        "senderId": 1,
+        "receiverId": 2,
+        "amount": 1000,
+        "moment": "2025-06-23T10:36:07.292349"
+    }
+
+Em caso de erro, por exemplo, se o saldo não for suficiente, a API retornará:
+
+    {
+        "timestamp": "2025-06-23T13:37:44.323555Z",
+        "status": 400,
+        "error": "Saldo insuficiente",
+        "path": "/transaction"
+    }
+
+---
+
 ## Tecnologias Utilizadas
 
 **Spring Boot** → Framework poderoso para back-end.  
