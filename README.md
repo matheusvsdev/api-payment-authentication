@@ -38,10 +38,8 @@ A documentação do Swagger oferece uma visão detalhada dos endpoints disponív
     Key        |      Value
     -----------|------------------------
     username   |     email@example.com
-    -----------|------------------------
-    password   |      Senha12345
-    -----------|------------------------
-    grant_type |      "password"
+    password   |     Senha12345
+    grant_type |     "password"
 
 Resposta no postman:
 
@@ -55,6 +53,7 @@ Copie o "access_token" e cole no em Authorize no Swagger para liberar os endpoin
 
 - **Endpoint: POST** /transaction
 - **Body**:
+
 
 
     {
